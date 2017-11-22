@@ -17,21 +17,10 @@ x = tf.placeholder(tf.float32, name='x')
 y = tf.placeholder(tf.float32, name='y')
 
 hypothesis = tf.add(tf.multiply(x, W), b, name='hypothesis')
-#pred = tf.add(tf.multiply(X, W), b)
-# hypothesis = tf.Variable([-.0], tf.float32, name='hypothesis')
-# tf.assign(hypothesis, x * W + b)
-
-
-# Histotram for tensorboard
-# tf.summary.histogram("weights", W)
-# tf.summary.histogram("bias", b)
-# tf.summary.histogram("hypo_hist", hypothesis)
-
+# linear_model = x * W + b
 
 # cost/loss function
 loss = tf.reduce_sum(tf.square(hypothesis - y), name='loss')  # sum of the squares
-#loss = tf.reduce_sum(tf.square( tf.subtract(hypothesis,y) ), name='loss')  # sum of the squares
-#loss = tf.reduce_sum(tf.square(x * W + b - y), name='loss')  # sum of the squares
 tf.summary.scalar("cost", loss)
 
 # optimizer
@@ -58,7 +47,6 @@ tf.train.write_graph(sess.graph_def, TB_SUMMARY_DIR,  MODEL_NAME + '.pbtxt')
 writer = tf.summary.FileWriter(TB_SUMMARY_DIR)
 writer.add_graph(sess.graph)
 global_step = 0
-
 
 for i in range(1000):
     # sess.run(train, {x: x_train, y: y_train})
@@ -93,8 +81,6 @@ freeze_graph.freeze_graph(input_graph_path, input_saver_def_path,
                           restore_op_name, filename_tensor_name,
                           output_frozen_graph_name, clear_devices, "")
 
-print(MODEL_NAME + " is freezed.")
-
 # Optimize for inference
 input_graph_def = tf.GraphDef()
 with tf.gfile.Open(output_frozen_graph_name, "rb") as f:  # r => rb
@@ -110,5 +96,3 @@ output_graph_def = optimize_for_inference_lib.optimize_for_inference(
 # Save the optimized graph
 f = tf.gfile.FastGFile(TB_SUMMARY_DIR + output_optimized_graph_name, "w")
 f.write(output_graph_def.SerializeToString())
-
-print(MODEL_NAME + " is optimized.")
