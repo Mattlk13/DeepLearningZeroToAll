@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow.python.tools import freeze_graph
 from tensorflow.python.tools import optimize_for_inference_lib
 
-MODEL_NAME = 'lab02_linear_regression'
+MODEL_NAME = 'lab_02_3_linear_regression'
 TB_SUMMARY_DIR = './saved/' + MODEL_NAME + '/'
 input_graph_path = TB_SUMMARY_DIR + MODEL_NAME+'.pbtxt'
 checkpoint_path = TB_SUMMARY_DIR + MODEL_NAME+'.ckpt'
