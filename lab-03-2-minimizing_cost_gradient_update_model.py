@@ -1,12 +1,6 @@
 # Lab 3 Minimizing Cost
 import tensorflow as tf
-from tensorflow.python.tools import freeze_graph
-from tensorflow.python.tools import optimize_for_inference_lib
-
-MODEL_NAME = 'lab_03_2_minimizing_cost_gradient_update'
-TB_SUMMARY_DIR = './saved/' + MODEL_NAME + '/'
-input_graph_path = TB_SUMMARY_DIR + MODEL_NAME+'.pbtxt'
-checkpoint_path = TB_SUMMARY_DIR + MODEL_NAME+'.ckpt'
+from utils import coldGraph
 
 tf.set_random_seed(777)  # for reproducibility
 
@@ -21,19 +15,12 @@ W = tf.Variable(tf.random_normal([1]), name='weight')
 X = tf.placeholder(tf.float32, name='X')
 Y = tf.placeholder(tf.float32, name='Y')
 
-tf.summary.histogram("X_hist", X)
-tf.summary.histogram("Y_hist", Y)
-
 # Our hypothesis for linear model X * W
 # hypothesis = X * W
 hypothesis = tf.multiply(X, W, name='hypothesis')
 
-tf.summary.histogram("hypothesis_hist", hypothesis)
-
 # cost/loss function
 cost = tf.reduce_mean(tf.square(hypothesis - Y), name='cost')
-
-tf.summary.scalar("cost_scalar", cost)
 
 # Minimize: Gradient Descent using derivative: W -= learning_rate * derivative
 learning_rate = 0.1
@@ -41,66 +28,16 @@ gradient = tf.reduce_mean((W * X - Y) * X)
 descent = W - learning_rate * gradient
 update = W.assign(descent)
 
-# Summary
-summary = tf.summary.merge_all()
-saver = tf.train.Saver()
-
-
 # Launch the graph in a session.
 sess = tf.Session()
 # Initializes global variables in the graph.
 sess.run(tf.global_variables_initializer())
 
-# save the graph
-tf.train.write_graph(sess.graph_def, TB_SUMMARY_DIR,  MODEL_NAME + '.pbtxt')
-
-# Create summary writer
-writer = tf.summary.FileWriter(TB_SUMMARY_DIR)
-writer.add_graph(sess.graph)
-global_step = 0
-
-
 for step in range(21):
     sess.run(update, feed_dict={X: x_data, Y: y_data})
-    #print(step, sess.run(cost, feed_dict={X: x_data, Y: y_data}), sess.run(W))
-    cost_val, W_val = sess.run([cost, W], feed_dict={X: x_data, Y: y_data})
-    print(step, cost_val, W_val)
-    global_step += 1
+    print(step, sess.run(cost, feed_dict={X: x_data, Y: y_data}), sess.run(W))
 
-saver.save(sess, checkpoint_path)
-
-
-# =================  chkpt  ==> pb    ======
-# Freeze the graph
-input_saver_def_path = ""
-input_binary = False
-output_node_names = "cost,hypothesis"
-restore_op_name = "save/restore_all"
-filename_tensor_name = "save/Const:cost, save/Const:hypothesis"
-output_frozen_graph_name = TB_SUMMARY_DIR +  'frozen_'+MODEL_NAME+'.pb'
-output_optimized_graph_name = 'optimized_'+MODEL_NAME+'.pb'
-clear_devices = True
-
-freeze_graph.freeze_graph(input_graph_path, input_saver_def_path,
-                          input_binary, checkpoint_path, output_node_names,
-                          restore_op_name, filename_tensor_name,
-                          output_frozen_graph_name, clear_devices, "")
-
-# Optimize for inference
-input_graph_def = tf.GraphDef()
-with tf.gfile.Open(output_frozen_graph_name, "rb") as f:  # r => rb
-    data = f.read()
-    input_graph_def.ParseFromString(data)
-
-output_graph_def = optimize_for_inference_lib.optimize_for_inference(
-        input_graph_def,
-        ["X"], # an array of the input node(s)
-        ["hypothesis", "cost"], # an array of output nodes
-        tf.float32.as_datatype_enum)
-
-# Save the optimized graph
-f = tf.gfile.FastGFile(TB_SUMMARY_DIR + output_optimized_graph_name, "w")
-f.write(output_graph_def.SerializeToString())
+coldGraph(sess, 'lab_03_2_minimizing_cost_gradient_update', "X", "cost,hypothesis", "save/Const:cost, save/Const:hypothesis" )
 
 
 '''
