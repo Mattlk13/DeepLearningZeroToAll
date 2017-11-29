@@ -1,4 +1,5 @@
 # From https://www.tensorflow.org/get_started/get_started
+# Implemented app source : https://github.com/nalsil/TensorflowSimApp
 import tensorflow as tf
 from utils import coldGraph
 

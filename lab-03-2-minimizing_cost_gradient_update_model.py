@@ -1,4 +1,5 @@
 # Lab 3 Minimizing Cost
+# Implemented app source : https://github.com/nalsil/TensorflowSimApp
 import tensorflow as tf
 from utils import coldGraph
 
