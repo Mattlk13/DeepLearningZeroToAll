@@ -1,5 +1,6 @@
 # From https://www.tensorflow.org/get_started/get_started
-# App source : https://github.com/nalsil/TensorflowSimApp
+# App source: https://github.com/nalsil/TensorflowSimApp
+# Play store: https://play.google.com/store/apps/details?id=com.nalsil.tensorflowsimapp
 import tensorflow as tf
 from utils import coldGraph
 

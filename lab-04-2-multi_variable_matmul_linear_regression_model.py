@@ -1,5 +1,6 @@
 # Lab 4 Multi-variable linear regression
-# App source : https://github.com/nalsil/TensorflowSimApp
+# App source: https://github.com/nalsil/TensorflowSimApp
+# Play store: https://play.google.com/store/apps/details?id=com.nalsil.tensorflowsimapp
 import tensorflow as tf
 from utils import coldGraph
 

@@ -9,10 +9,21 @@ def coldGraph(sess,
               output_node_names,
               filename_tensor_name):
 
+    '''
+    :param sess:
+    :param model_name:
+    :param input_node_names:
+    :param output_node_names: Enter multi-node names without spaces  ex) "hypotheis, cost" (X) ==> "hypotheis,cost"  (O)
+    :param filename_tensor_name:
+    :return:
+    '''
+
     MODEL_NAME = model_name
     TB_SUMMARY_DIR = './saved/' + MODEL_NAME + '/'
     input_graph_path = TB_SUMMARY_DIR + MODEL_NAME+'.pbtxt'
     checkpoint_path = TB_SUMMARY_DIR + MODEL_NAME+'.ckpt'
+
+    output_node_names = output_node_names.replace(' ','')
 
     #  Get the saver
     saver = tf.train.Saver()
@@ -43,7 +54,8 @@ def coldGraph(sess,
         data = f.read()
         input_graph_def.ParseFromString(data)
 
-    arrOutput_node_names = output_node_names.split(",")
+    arrOutput_node_names = output_node_names.split(',')
+    # print(arrOutput_node_names)
 
     output_graph_def = optimize_for_inference_lib.optimize_for_inference(
             input_graph_def,
