@@ -54,7 +54,6 @@ with tf.Session() as sess:
                        feed_dict={X: x_data, Y: y_data})
     print("\nHypothesis: ", h, "\nCorrect (Y): ", c, "\nAccuracy: ", a)
 
-    # coldGraph(sess, 'lab_05_1_logistic_regression', "X", "accuracy, predicted, hypothesis", "save/Const:accuracy,save/Const:predicted,save/Const:hypothesis" )
     coldGraph(sess, 'lab_05_1_logistic_regression', "X", "hypothesis, predicted, accuracy", "save/Const:hypothesis, save/Const:predicted, save/Const:accuracy" )
 
 
