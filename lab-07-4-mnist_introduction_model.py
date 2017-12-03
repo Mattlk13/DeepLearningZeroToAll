@@ -62,7 +62,6 @@ with tf.Session() as sess:
 
     # Test the model using test sets
     print("Accuracy: ", accuracy.eval(session=sess, feed_dict={X: mnist.test.images, Y: mnist.test.labels}))
-    print("Accuracy[0:1000 + 1]: ", accuracy.eval(session=sess, feed_dict={X: mnist.test.images[0:1000 + 1], Y: mnist.test.labels[0:1000 + 1]}))
 
     # Get one and predict
     # r = random.randint(0, mnist.test.num_examples - 1)
