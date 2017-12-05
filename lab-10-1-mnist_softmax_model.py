@@ -25,8 +25,9 @@ Y = tf.placeholder(tf.float32, [None, 10], name='Y')
 W = tf.Variable(tf.random_normal([784, 10]))
 b = tf.Variable(tf.random_normal([10]))
 
-hypothesis = tf.matmul(X, W) + b
-hypothesis_new = tf.nn.softmax(tf.matmul(X, W) + b, name='hypothesis')
+# hypothesis =  tf.matmul(X, W) + b
+hypothesis =  tf.add(tf.matmul(X, W),  b, name='hypothesis')
+#hypothesis_new = tf.nn.softmax(tf.matmul(X, W) + b, name='hypothesis')
 
 
 # define cost/loss & optimizer
